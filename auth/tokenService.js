@@ -1,0 +1,27 @@
+import jwt from 'jsonwebtoken';
+import { JWT_EXPIRES_IN, getJwtSecret } from '../config/auth.js';
+
+export function issueToken(userId, role) {
+  return jwt.sign(
+    { 
+      sub: String(userId),
+      role: String(role)
+    },
+    getJwtSecret(),
+    { algorithm: 'HS256', expiresIn: JWT_EXPIRES_IN }
+  );
+}
+
+export function verifyToken(token) {
+   try {
+    const claims = jwt.verify(token, getJwtSecret(), { algorithms: ['HS256'] });
+    if (typeof claims?.sub !== 'string' ||
+        !/^[1-9]\d*$/.test(claims.sub)) return null;
+    return claims;
+  } catch {
+    return null;
+  }
+}
+
+export { JWT_EXPIRES_IN };
+
