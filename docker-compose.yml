@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: wallet
+      MYSQL_USER: wallet
+      MYSQL_PASSWORD: wallet
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      # Sinkron dengan nama berkas berkode Anda: wallet.sql
+      - ./database/wallet.sql:/docker-entrypoint-initdb.d/wallet.sql:ro
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uwallet", "-pwallet"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: wallet
+      DB_PASSWORD: wallet
+      DB_NAME: wallet
+      JWT_SECRET: ${JWT_SECRET:-supersecretkey_bootcamp}
+    ports:
+      - "${APP_PORT:-5000}:5000"
+
+volumes:
+  db_data:
