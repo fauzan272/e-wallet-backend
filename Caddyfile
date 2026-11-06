@@ -4,7 +4,7 @@
 
 # Pengaturan yang dipakai oleh setiap alamat di bawah.
 (backend) {
-	# SESUAIKAN: 3000 harus sama dengan PORT backend kamu.
+	# DIUBAH: Menggunakan app karena sekarang Caddy berjalan di dalam Docker bersama backend
 	reverse_proxy app:5000
 
 	encode gzip
@@ -15,9 +15,9 @@
 	}
 }
 
-# SESUAIKAN: subdomain API kamu. A record-nya harus sudah mengarah ke IP VPS.
-# Belum punya domain (hanya untuk latihan)? Ganti baris ini dengan  :80 {
-api-two.fauzanproject.my.id {
+# Subdomain API kamu.
+# Ditambahkan https:// di depan agar Caddy otomatis memproses SSL/HTTPS pada port 5000
+https://api-two.fauzanproject.my.id {
 	import backend
 }
 
