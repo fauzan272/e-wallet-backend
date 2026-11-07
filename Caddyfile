@@ -4,20 +4,15 @@
 
 # Pengaturan yang dipakai oleh setiap alamat di bawah.
 (backend) {
-	# DIUBAH: Menggunakan app karena sekarang Caddy berjalan di dalam Docker bersama backend
-	reverse_proxy app:5000
-
+	reverse_proxy app-new-app-1:5000
 	encode gzip
-
-	# Tolak body request yang terlalu besar.
 	request_body {
 		max_size 1MB
 	}
 }
 
-# Subdomain API kamu.
-# Ditambahkan https:// di depan agar Caddy otomatis memproses SSL/HTTPS pada port 5000
-https://api-two.fauzanproject.my.id {
+# Subdomain API kamu di port kustom 8443
+api-two.fauzanproject.my.id {
 	import backend
 }
 
